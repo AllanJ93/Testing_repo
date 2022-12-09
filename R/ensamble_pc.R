@@ -43,16 +43,6 @@ precios <- ensambles %>%
   left_join(disipador %>% select(id, precio_disipador = precio), by = c("id_disipador" = "id")) %>% select(!id_disipador) %>%
   left_join(gpu %>% select(id, precio_gpu = precio), by = c("id_gpu" = "id")) %>% select(!id_gpu)
 
-ensambles %>%
-  left_join(cpus %>% mutate(cpu = paste(fabricante, modelo)) %>% select(id, cpu), by = c("id_cpu" = "id")) %>% select(!id_cpu) %>%
-  left_join(motherboards %>% mutate(motherboard = paste(fabricante, modelo)) %>% select(id, motherboard), by = c("id_motherboard" = "id")) %>% select(!id_motherboard) %>%
-  left_join(almacenamiento %>% mutate(almacenamiento = paste(fabricante, modelo)) %>% select(id, almacenamiento), by = c("id_almacenamiento" = "id")) %>% select(!id_almacenamiento) %>%
-  left_join(ram %>% mutate(ram = paste(fabricante, modelo)) %>% select(id, ram), by = c("id_ram" = "id")) %>% select(!id_ram) %>%
-  left_join(fuente_de_poder %>% mutate(fuente_de_poder = paste(fabricante, modelo)) %>% select(id, fuente_de_poder), by = c("id_fuente_de_poder" = "id")) %>% select(!id_fuente_de_poder) %>%
-  left_join(disipador %>% mutate(disipador = paste(fabricante, modelo)) %>% select(id, disipador), by = c("id_disipador" = "id")) %>% select(!id_disipador) %>%
-  left_join(gpu %>% mutate(gpu = paste(fabricante, modelo)) %>% select(id, gpu), by = c("id_gpu" = "id")) %>% select(!id_gpu)
-
-
 calcular_costo_ensamble <- function(){
   precios %>% pivot_longer(cols = !ensamble, names_to = "componente",
                                                           names_prefix = "precio_",   values_to = "precio") %>%
@@ -60,11 +50,23 @@ calcular_costo_ensamble <- function(){
     summarise(total = scales::comma(sum(precio, na.rm = T)))
 }
 
+desplegar_calculo <- function(){
+  ensambles %>%
+    left_join(cpus %>% mutate(cpu = paste(fabricante, modelo)) %>% select(id, cpu), by = c("id_cpu" = "id")) %>% select(!id_cpu) %>%
+    left_join(motherboards %>% mutate(motherboard = paste(fabricante, modelo)) %>% select(id, motherboard), by = c("id_motherboard" = "id")) %>% select(!id_motherboard) %>%
+    left_join(almacenamiento %>% mutate(almacenamiento = paste(fabricante, modelo)) %>% select(id, almacenamiento), by = c("id_almacenamiento" = "id")) %>% select(!id_almacenamiento) %>%
+    left_join(ram %>% mutate(ram = paste(fabricante, modelo)) %>% select(id, ram), by = c("id_ram" = "id")) %>% select(!id_ram) %>%
+    left_join(fuente_de_poder %>% mutate(fuente_de_poder = paste(fabricante, modelo)) %>% select(id, fuente_de_poder), by = c("id_fuente_de_poder" = "id")) %>% select(!id_fuente_de_poder) %>%
+    left_join(disipador %>% mutate(disipador = paste(fabricante, modelo)) %>% select(id, disipador), by = c("id_disipador" = "id")) %>% select(!id_disipador) %>%
+    left_join(gpu %>% mutate(gpu = paste(fabricante, modelo)) %>% select(id, gpu), by = c("id_gpu" = "id")) %>% select(!id_gpu) %>%
+    left_join(calcular_costo_ensamble()) %>% View()
+}
+
 
 
 
 # Resultado ---------------------------------------------------------------
 
-calcular_costo_ensamble()
+desplegar_calculo()
 
 
