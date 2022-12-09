@@ -59,7 +59,7 @@ desplegar_calculo <- function(){
     left_join(fuente_de_poder %>% mutate(fuente_de_poder = paste(fabricante, modelo)) %>% select(id, fuente_de_poder), by = c("id_fuente_de_poder" = "id")) %>% select(!id_fuente_de_poder) %>%
     left_join(disipador %>% mutate(disipador = paste(fabricante, modelo)) %>% select(id, disipador), by = c("id_disipador" = "id")) %>% select(!id_disipador) %>%
     left_join(gpu %>% mutate(gpu = paste(fabricante, modelo)) %>% select(id, gpu), by = c("id_gpu" = "id")) %>% select(!id_gpu) %>%
-    left_join(calcular_costo_ensamble()) %>% View()
+    left_join(calcular_costo_ensamble(), by = "ensamble") %>% View()
 }
 
 
