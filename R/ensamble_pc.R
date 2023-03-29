@@ -20,22 +20,25 @@ motherboards <- readxl::read_xlsx(path = "data-raw/Presupuesto PC.xlsx", sheet =
 almacenamiento <- readxl::read_xlsx(path = "data-raw/Presupuesto PC.xlsx", sheet = 4) %>%
   janitor::clean_names()
 
-ram <- readxl::read_xlsx(path = "data-raw/Presupuesto PC.xlsx", sheet = 5) %>%
+secundario <- readxl::read_xlsx(path = "data-raw/Presupuesto PC.xlsx", sheet = 5) %>%
   janitor::clean_names()
 
-fuente_de_poder <- readxl::read_xlsx(path = "data-raw/Presupuesto PC.xlsx", sheet = 6) %>%
+ram <- readxl::read_xlsx(path = "data-raw/Presupuesto PC.xlsx", sheet = 6) %>%
   janitor::clean_names()
 
-disipador <- readxl::read_xlsx(path = "data-raw/Presupuesto PC.xlsx", sheet = 7) %>%
+fuente_de_poder <- readxl::read_xlsx(path = "data-raw/Presupuesto PC.xlsx", sheet = 7) %>%
   janitor::clean_names()
 
-gpu <- readxl::read_xlsx(path = "data-raw/Presupuesto PC.xlsx", sheet = 8) %>%
+disipador <- readxl::read_xlsx(path = "data-raw/Presupuesto PC.xlsx", sheet = 8) %>%
   janitor::clean_names()
 
-pasta <- readxl::read_xlsx(path = "data-raw/Presupuesto PC.xlsx", sheet = 9) %>%
+gpu <- readxl::read_xlsx(path = "data-raw/Presupuesto PC.xlsx", sheet = 9) %>%
   janitor::clean_names()
 
-gabinetes <- readxl::read_xlsx(path = "data-raw/Presupuesto PC.xlsx", sheet = 10) %>%
+pasta <- readxl::read_xlsx(path = "data-raw/Presupuesto PC.xlsx", sheet = 10) %>%
+  janitor::clean_names()
+
+gabinetes <- readxl::read_xlsx(path = "data-raw/Presupuesto PC.xlsx", sheet = 11) %>%
   janitor::clean_names()
 
 # Procesamiento -----------------------------------------------------------
@@ -44,6 +47,7 @@ precios <- ensambles %>%
   left_join(cpus %>% select(id, precio_cpu = precio), by = c("id_cpu" = "id")) %>% select(!id_cpu) %>%
   left_join(motherboards %>% select(id, precio_motherboards = precio), by = c("id_motherboard" = "id")) %>% select(!id_motherboard) %>%
   left_join(almacenamiento %>% select(id, precio_almacenamiento = precio), by = c("id_almacenamiento" = "id")) %>% select(!id_almacenamiento) %>%
+  left_join(secundario %>% select(id, precio = precio), by = c("id_secundario" = "id")) %>% select(!id_secundario) %>%
   left_join(ram %>% select(id, precio_ram = precio), by = c("id_ram" = "id")) %>% select(!id_ram) %>%
   left_join(fuente_de_poder %>% select(id, precio_fuente_de_poder = precio), by = c("id_fuente_de_poder" = "id")) %>% select(!id_fuente_de_poder) %>%
   left_join(disipador %>% select(id, precio_disipador = precio), by = c("id_disipador" = "id")) %>% select(!id_disipador) %>%
@@ -62,7 +66,8 @@ desplegar_calculo <- function(){
   ensambles %>%
     left_join(cpus %>% mutate(cpu = paste(fabricante, modelo)) %>% select(id, cpu), by = c("id_cpu" = "id")) %>% select(!id_cpu) %>%
     left_join(motherboards %>% mutate(motherboard = paste(fabricante, modelo)) %>% select(id, motherboard), by = c("id_motherboard" = "id")) %>% select(!id_motherboard) %>%
-    left_join(almacenamiento %>% mutate(almacenamiento = paste(fabricante, modelo)) %>% select(id, almacenamiento), by = c("id_almacenamiento" = "id")) %>% select(!id_almacenamiento) %>%
+    left_join(almacenamiento %>% mutate(almacenamiento = paste(fabricante, modelo, "x", unidades)) %>% select(id, almacenamiento), by = c("id_almacenamiento" = "id")) %>% select(!id_almacenamiento) %>%
+    left_join(secundario %>% mutate(secundario = paste(fabricante, modelo)) %>% select(id, secundario), by = c("id_secundario" = "id")) %>% select(!id_secundario) %>%
     left_join(ram %>% mutate(ram = paste(fabricante, modelo)) %>% select(id, ram), by = c("id_ram" = "id")) %>% select(!id_ram) %>%
     left_join(fuente_de_poder %>% mutate(fuente_de_poder = paste(fabricante, modelo)) %>% select(id, fuente_de_poder), by = c("id_fuente_de_poder" = "id")) %>% select(!id_fuente_de_poder) %>%
     left_join(disipador %>% mutate(disipador = paste(fabricante, modelo)) %>% select(id, disipador), by = c("id_disipador" = "id")) %>% select(!id_disipador) %>%
