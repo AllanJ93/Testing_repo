@@ -76,12 +76,12 @@ desplegar_calculo <- function(){
     left_join(gabinetes %>% mutate(gabinete = paste(fabricante, modelo)) %>% select(id, gabinete), by = c("id_gabinete" = "id")) %>% select(!id_gabinete) %>%
     left_join(calcular_costo_ensamble(), by = "ensamble") %>%
     arrange(desc(total)) %>%
-    mutate(total = paste("$", scales::comma(total), sep = " ")) %>%
-    View()
+    mutate(total = paste("$", scales::comma(total), sep = " "))
 }
 
 # Resultado ---------------------------------------------------------------
 
-desplegar_calculo()
+desplegar_calculo() |> 
+  filter(grepl(pattern = "faltantes_", x = ensamble)) |> View()
 
 
